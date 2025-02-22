@@ -42,7 +42,7 @@ export function loginUser(req, res) {
                     lastName : user.lastName,
                     email : user.email,
                     role : user.role
-                },"kv-secret-89!")
+                }, env.process.JWT_SECRET)
                 res.json({message:"Login Successful", token : token});
 
             }else{
