@@ -5,6 +5,9 @@ import StudentRouter from "./routes/studentroute.js";
 import userRouter from "./routes/userRouter.js";  
 import productRouter from "./routes/productRouter.js";
 import jwt from 'jsonwebtoken';
+import  dotenv from "dotenv";
+
+dotenv.config();
 
 let app = express();
 
@@ -23,12 +26,12 @@ app.use((req,res,next) => {
             }
         });
         
-    }
+    }   
     next(); 
 });
 
 // MongoDB Connection
-const mongoUrl = "mongodb+srv://admin:19661970ta@cluster09.gd6hu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster09";
+const mongoUrl = process.env.MONGO_URL;
 
 mongoose.connect(mongoUrl);
 
