@@ -9,6 +9,7 @@ import  dotenv from "dotenv";
 
 dotenv.config();
 
+
 let app = express();
 
 app.use(bodyParser.json());
@@ -19,19 +20,19 @@ app.use((req,res,next) => {
 
     if(token != null){
         token = token.replace("Bearer ", "");
-        jwt.verify(token, env.process.JWT_SECRET,
+        jwt.verify(token, process.env.JWT_SECRET,
         (err,decoded) => {
             if(!err){
                 req.user = decoded;
             }
         });
         
-    }   
+    }
     next(); 
 });
 
 // MongoDB Connection
-const mongoUrl = process.env.MONGO_URL;
+const mongoUrl = process.env.MONOGO_URL;
 
 mongoose.connect(mongoUrl);
 
