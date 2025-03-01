@@ -34,6 +34,11 @@ const userSchema = new mongoose.Schema({
     whatsapp :{
         type : String,
         required : true
+    },
+    profilePicture : {
+        type : String,
+        required : true,
+        default : "https://www.shutterstock.com/shutterstock/photos/1677509740/display_1500/stock-vector-default-avatar-profile-icon-social-media-user-vector-1677509740.jpg"
     }
 
 })
