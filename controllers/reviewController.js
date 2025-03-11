@@ -41,7 +41,8 @@ export function addReview(req, res) {
 }
 
 export function getReview(req,res){
-    const user = req.user;
+    try{
+        const user = req.user;
 
     if(user == null || user.role != "admin"){
         Review.find({isApproved : true}).then((reviews)=>{
@@ -54,9 +55,13 @@ export function getReview(req,res){
             res.json(reviews);
         })
     }
+    }catch(error){
+        res.status(500).json({message : "error occured"})
+    }
 }
 
 export default function deleteReview(req, res) {
+   try{
     const email = req.params.email;
 
     if (req.user == null) {
@@ -92,9 +97,14 @@ export default function deleteReview(req, res) {
             });
         }
     }
+    
+   }catch(error){
+    res.status(500).json({message : "error occured"})
+   } 
 }
 
 export function approvedReview(req, res) {
+   try{
     const email = req.params.email;
 
     if (req.user == null) {
@@ -125,4 +135,8 @@ export function approvedReview(req, res) {
             message: "You are not authorized to approve a review. Only admin users can approve reviews."
         });
     }
+
+   }catch(error){
+    res.status(500).json({message : "error occured"})
+   }
 }

@@ -3,7 +3,8 @@ import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken'; 
 
 export function registerUser(req, res) {
-    const userData = req.body;
+    try{
+        const userData = req.body;
 
     userData.password = bcrypt.hashSync(userData.password, 10);
 
@@ -21,10 +22,14 @@ export function registerUser(req, res) {
                 details: error.message || error
             });
         });
+    }catch(error){
+        res.status(500).json({message : "error occured"})
+    }
 }
 
 export function loginUser(req, res) {
-    const data = req.body;
+    try{
+        const data = req.body;
 
     User.findOne({ 
         email: data.email 
@@ -52,4 +57,7 @@ export function loginUser(req, res) {
         }
     }
 )
+    }catch(error){
+        res.status(500).json({message : "error occured"})
+    }
 };
