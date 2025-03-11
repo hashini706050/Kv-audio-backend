@@ -1,7 +1,9 @@
+import { escape } from "querystring";
 import Review from "../models/review.js";
 
 export function addReview(req, res) {
-    // Check if the user is authenticated
+    try{
+        // Check if the user is authenticated
     if (req.user == null) {
         return res.status(401).json({
             message: "Please login and try again"
@@ -31,6 +33,11 @@ export function addReview(req, res) {
                 details: error.message // It's helpful to include the error message
             });
         });
+
+    }catch(error){
+        res.status(500).json({message : "error occured"});
+    }
+    
 }
 
 export function getReview(req,res){
