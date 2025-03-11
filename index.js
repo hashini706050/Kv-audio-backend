@@ -15,25 +15,25 @@ let app = express();
 
 app.use(bodyParser.json());
 
-app.use((req,res,next) => {
-    let token = req.header
-    ('Authorization')
-
-    if(token != null){
-        token = token.replace("Bearer ", "");
-        jwt.verify(token, process.env.JWT_SECRET,
-        (err,decoded) => {
-            if(!err){
-                req.user = decoded;
-            }
-        });
+//app.use((req,res,next) => {
+//   let token = req.header
+//    ('Authorization')
+//
+//    if(token != null){
+//        token = token.replace("Bearer ", "");
+//        jwt.verify(token, process.env.JWT_SECRET,
+//        (err,decoded) => {
+//            if(!err){
+//                req.user = decoded;
+//            }
+//        });
         
-    }
-    next(); 
-});
+//    }
+//    next(); 
+//});
 
 // MongoDB Connection
-const mongoUrl = process.env.MONOGO_URL;
+const mongoUrl = process.env.MONGO_URL;
 
 mongoose.connect(mongoUrl);
 
