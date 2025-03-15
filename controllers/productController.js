@@ -37,10 +37,27 @@ export async function addProduct(req,res){
 }
 
 export async function getProduct(req,res){
-    try{
-        const products = await Product.find();
-        res.json(products);
 
+    let isAdmin = false;
+
+    if(req.user != null) {
+        if(req.user.role == "admin"){
+            isAdmin = true;
+        }
+    }
+
+    try{
+        if(isAdmin){
+            const products = await Product.find();
+            res.json(products);
+            return;
+        }else{
+            const products = await Product.find
+            ({availability:true})
+            res.json(products);
+            return;
+        }
+        
 
     }catch(error){
         res.status(500).json({
