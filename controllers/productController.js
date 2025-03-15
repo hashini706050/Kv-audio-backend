@@ -1,7 +1,8 @@
 import Product from "../models/product.js";
 
 export async function addProduct(req,res){
-    try{console.log(req.user)
+    try{
+        console.log(req.user)
 
         if(req.user == null){
             res.status(401).json({message : "Please login and try again"})
@@ -33,5 +34,19 @@ export async function addProduct(req,res){
     }}catch(error){
         res.status(500).json({message : "error occured"})
     }
+}
+
+export async function getProduct(req,res){
+    try{
+        const products = await Product.find();
+        res.json(products);
+
+
+    }catch(error){
+        res.status(500).json({
+            message : "Failed to get product"
+        })
+    }
+
 }
 
