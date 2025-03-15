@@ -61,3 +61,16 @@ export function loginUser(req, res) {
         res.status(500).json({message : "error occured"})
     }
 };
+
+
+export function isItAdmin(req)
+{
+    let isAdmin = false;
+
+    if(req.user != null){
+        if(req.user.role = "admin"){
+            isAdmin = true;
+        }
+    }
+    return isAdmin;
+};

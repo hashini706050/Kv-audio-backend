@@ -1,4 +1,5 @@
 import Product from "../models/product.js";
+import { isItAdmin } from "./userController.js";
 
 export async function addProduct(req,res){
     try{
@@ -38,16 +39,8 @@ export async function addProduct(req,res){
 
 export async function getProduct(req,res){
 
-    let isAdmin = false;
-
-    if(req.user != null) {
-        if(req.user.role == "admin"){
-            isAdmin = true;
-        }
-    }
-
     try{
-        if(isAdmin){
+        if(isItAdmin(req)){
             const products = await Product.find();
             res.json(products);
             return;
@@ -67,3 +60,31 @@ export async function getProduct(req,res){
 
 }
 
+export async function updateProduct(req,res){
+    try{
+
+        if(isItAdmin(req)){
+
+            const key = req.params.key;
+
+            const data = req.body;
+
+            await Product.updateOne({key:key}, data)
+
+            res.json({
+                message : "proudct updated successfully"
+            })
+            return;
+            
+        }else{
+            res.status(403).json({
+                message : "You are not authorized to perform this action"
+            })
+        }
+    }catch(error){
+        res.status(500).json({
+            message : "Failed to get product"
+        })
+    }
+    
+}
