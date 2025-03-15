@@ -15,22 +15,25 @@ let app = express();
 
 app.use(bodyParser.json());
 
-app.use((req,res,next) => {
-   let token = req.header
-    ('Authorization')
+app.use((req, res, next) => {
+    let token = req.header('Authorization');
+    
+    if (token) {
+        token = token.replace("Bearer ", "");  // Remove the "Bearer" prefix
 
-    if(token != null){
-        token = token.replace("Bearer ", "");
-        jwt.verify(token, process.env.JWT_SECRET,
-        (err,decoded) => {
-            if(!err){
-                req.user = decoded;
+        // Verify the token
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: "Invalid or expired token" });
             }
+            req.user = decoded;  // Set the decoded user information in the request object
+            next();  // Proceed to the next middleware or route handler
         });
-        
+    } else {
+        return res.status(401).json({ message: "Authorization token required" });
     }
-    next(); 
 });
+
 
 // MongoDB Connection
 const mongoUrl = process.env.MONGO_URL;
