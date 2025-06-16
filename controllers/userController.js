@@ -27,31 +27,38 @@ export async function registerUser(req, res) {
 
 export function loginUser(req, res) {
     try {
-        const data = req.body;
+        const { email, password } = req.body; // Destructure for readability
 
-        User.findOne({ email: data.email }).then((user) => {
-            if (user == null) {
+        User.findOne({ email }).then((user) => {
+            if (!user) {
                 return res.status(404).json({ error: "User not found" });
             }
 
-            const isPasswordCorrect = bcrypt.compareSync(data.password, user.password);
+            const isPasswordCorrect = bcrypt.compareSync(password, user.password);
+            if (!isPasswordCorrect) {
+                return res.status(403).json({ message: "Invalid email or password" });
+            }
 
-            if (isPasswordCorrect) {
-                const token = jwt.sign({
+            const token = jwt.sign(
+                {
                     firstName: user.firstName,
                     lastName: user.lastName,
                     email: user.email,
                     role: user.role,
                     profilePicture: user.profilePicture,
                     phone: user.phone
-                }, process.env.JWT_SECRET, { expiresIn: '1h' });
+                },
+                process.env.JWT_SECRET,
+                { expiresIn: '1h' }
+            );
 
-                res.json({ message: "Login Successful", token: token });
-            } else {
-                res.status(403).json({ message: "Login Unsuccessful" });
-            }
+            res.json({ message: "Login Successful", token: token, role : user.role});
+        }).catch((error) => {
+            console.error("Error finding user:", error);
+            res.status(500).json({ message: "Internal Server Error" });
         });
     } catch (error) {
+        console.error("Login error:", error);
         res.status(500).json({ message: "Error occurred during login" });
     }
 }
@@ -67,6 +74,6 @@ export function isItAdmin(req) {
     return isAdmin;
 }
 
-export function isItCustomer(req) {
-    return req.user && req.user.role === "customer";  // Simple check
+export function isItCustomer(req) { 
+    return req.user?.role === "customer";
 }
