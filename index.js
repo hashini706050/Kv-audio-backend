@@ -83,3 +83,7 @@ server.on('error', (err) => {
 
 //admin@gmail.com 123
 //cus@example.com 456
+//"email": "newuser2@example.com",
+//"password": "mypassword123"
+// "email": "admin@example.com",
+// "password": "admin123"
