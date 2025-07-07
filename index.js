@@ -1,7 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
-import StudentRouter from "./routes/studentroute.js";
 import userRouter from "./routes/userRouter.js";  
 import productRouter from "./routes/productRouter.js";
 import jwt from 'jsonwebtoken';
@@ -53,7 +52,6 @@ connection.once("open", () => {
     console.log("MongoDB connection established successfully");
 });
 
-app.use("/students", StudentRouter)
 app.use("/users", userRouter)
 app.use("/products",productRouter) 
 app.use("/reviews", reviewRouter)
@@ -85,5 +83,6 @@ server.on('error', (err) => {
 //cus@example.com 456
 //"email": "newuser2@example.com",
 //"password": "mypassword123"
-// "email": "admin@example.com",
+// "email": "mypassword123",
 // "password": "admin123"
+
