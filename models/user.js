@@ -31,10 +31,6 @@ const userSchema = new mongoose.Schema({
         type : String,
         required : true
     },
-    whatsapp :{
-        type : String,
-        required : true
-    },
     profilePicture : {
         type : String,
         required : true,

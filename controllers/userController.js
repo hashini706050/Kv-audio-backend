@@ -18,6 +18,7 @@ export async function registerUser(req, res) {
         });
 
     } catch (error) {
+        console.error("Registration error:", error);
         res.status(500).json({
             message: "Error occurred during registration",
             details: error.message || error
@@ -27,7 +28,7 @@ export async function registerUser(req, res) {
 
 export function loginUser(req, res) {
     try {
-        const { email, password } = req.body; // Destructure for readability
+        const { email, password } = req.body;
 
         User.findOne({ email }).then((user) => {
             if (!user) {
