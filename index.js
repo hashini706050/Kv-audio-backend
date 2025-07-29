@@ -9,6 +9,7 @@ import reviewRouter from "./routes/reviewRouter.js";
 import inquiryRouter from "./routes/inquiryRouter.js";
 import deliveryRouter from "./routes/deliveryRoute.js";
 import cors from 'cors';
+import orderRouter from "./routes/orderRoute.js";
 
 dotenv.config();
 
@@ -57,6 +58,7 @@ app.use("/products",productRouter)
 app.use("/reviews", reviewRouter)
 app.use("/inquiries", inquiryRouter)
 app.use("/deliveries", deliveryRouter);
+app.use("/orders", orderRouter);
 
 // Start the server and listen on the specified port
 const server = app.listen(port, () => {
@@ -85,4 +87,3 @@ server.on('error', (err) => {
 //"password": "mypassword123"
 // "email": "mypassword123",
 // "password": "admin123"
-
