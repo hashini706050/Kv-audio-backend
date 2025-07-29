@@ -20,7 +20,6 @@ const orderSchema = new mongoose.Schema({
       {
         product: {
           type: new mongoose.Schema({
-
             key: { type: String, required: true },
             name: { type: String, required: true },
             image: { type: String, required: true },
