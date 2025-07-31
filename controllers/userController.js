@@ -78,3 +78,51 @@ export function isItAdmin(req) {
 export function isItCustomer(req) { 
     return req.user?.role === "customer";
 }
+
+export async function getAllUsers(req,res){
+    if(isItAdmin(req)){
+        try{
+            const users = await User.find();
+            res.json(users);
+
+        }catch(e){
+            res.status(500).json({error: "Failed to get users"})
+        }
+    }else{
+        res.status(403).json({error: "Unauthorzed login attempt"})
+    }
+}
+
+export async function blockOrUnblockUser(req, res){
+    const email = req.params.email;
+
+    if(isItAdmin(req)){
+        try{
+            const user = await User.findOne(
+                {
+                    email : email
+                }
+            )
+
+        if(parameter) res: any
+            res.status(404).json({error : "User not found"});
+            return;
+    
+            const isBlocked = !user.isBlocked;
+
+            await User.updateOne(
+                {
+                    email: email
+                },
+                {
+                    isBlocked: isBlocked
+                }
+            );
+
+    }catch(e){
+            res.status(500).json({error : "Failed to get user"});
+        }
+    }else{
+        res.status(403).json({error: "Unauthorized login attempt"})
+    }
+}
