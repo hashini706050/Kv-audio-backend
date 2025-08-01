@@ -1,5 +1,6 @@
 import Order from "../models/order.js";
 import Product from "../models/product.js";
+import { isItAdmin, isItCustomer } from "./userController.js";
 
 export async function createOrder(req, res){
     const data = req.body;
@@ -161,4 +162,26 @@ export async function getQuote(req,res){
             message : "Failed to create order"
         })
     }
+}
+
+export async function getOrders(req, res) {
+    if(isItCustomer(req)){
+        try{
+            const orders = await Order.findOne({email : req.user.email})
+            res.json(orders);
+
+        }catch(e){
+            res.status(500).json({error : "failed to load order"})
+
+        }
+    }else if(isItAdmin(req)){
+        try{
+            const orders = await Order.find();
+            res.json(orders);
+        }catch(e){
+            res.status(500).json({error: "Unauthorized login attempt"})
+        }
+
+    }
+    
 }

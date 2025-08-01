@@ -35,6 +35,10 @@ export function loginUser(req, res) {
                 return res.status(404).json({ error: "User not found" });
             }
 
+            if (user.isBlocked) {
+                return res.status(403).json({ error: "Your account is blocked. Please contact admin" });
+            }
+
             const isPasswordCorrect = bcrypt.compareSync(password, user.password);
             if (!isPasswordCorrect) {
                 return res.status(403).json({ message: "Invalid email or password" });
@@ -53,16 +57,17 @@ export function loginUser(req, res) {
                 { expiresIn: '1h' }
             );
 
-            res.json({ message: "Login Successful", token: token, role : user.role});
+            return res.json({ message: "Login Successful", token: token, role: user.role });
         }).catch((error) => {
             console.error("Error finding user:", error);
-            res.status(500).json({ message: "Internal Server Error" });
+            return res.status(500).json({ message: "Internal Server Error" });
         });
     } catch (error) {
         console.error("Login error:", error);
-        res.status(500).json({ message: "Error occurred during login" });
+        return res.status(500).json({ message: "Error occurred during login" });
     }
 }
+
 
 export function isItAdmin(req) {
     let isAdmin = false;
@@ -93,36 +98,34 @@ export async function getAllUsers(req,res){
     }
 }
 
-export async function blockOrUnblockUser(req, res){
+export async function blockOrUnblockUser(req, res) {
     const email = req.params.email;
 
-    if(isItAdmin(req)){
-        try{
-            const user = await User.findOne(
-                {
-                    email : email
-                }
-            )
+    if (isItAdmin(req)) {
+        try {
+            const user = await User.findOne({ email });
 
-        if(parameter) res: any
-            res.status(404).json({error : "User not found"});
-            return;
-    
+            if (!user) {
+                return res.status(404).json({ error: "User not found" });
+            }
+
             const isBlocked = !user.isBlocked;
 
             await User.updateOne(
-                {
-                    email: email
-                },
-                {
-                    isBlocked: isBlocked
-                }
+                { email },
+                { isBlocked }
             );
 
-    }catch(e){
-            res.status(500).json({error : "Failed to get user"});
+            res.status(200).json({
+                message: `User ${isBlocked ? "blocked" : "unblocked"} successfully`,
+                email,
+                isBlocked
+            });
+        } catch (e) {
+            console.error("Error in blockOrUnblockUser:", e);
+            res.status(500).json({ error: "Failed to block or unblock user" });
         }
-    }else{
-        res.status(403).json({error: "Unauthorized login attempt"})
+    } else {
+        res.status(403).json({ error: "Unauthorized login attempt" });
     }
 }
