@@ -129,3 +129,11 @@ export async function blockOrUnblockUser(req, res) {
         res.status(403).json({ error: "Unauthorized login attempt" });
     }
 }
+
+export function getUser(req,res){
+    if(req.user != null){
+        res.json(req.user);
+    }else{
+        res.status(403).json({error : "error occured"})
+    }
+}

@@ -1,3 +1,4 @@
+import { error } from "console";
 import Order from "../models/order.js";
 import Product from "../models/product.js";
 import { isItAdmin, isItCustomer } from "./userController.js";
@@ -83,6 +84,8 @@ export async function createOrder(req, res){
     orderInfo.totalAmount = oneDayCost * data.days; // Not totalCost
 
     try{
+        orderInfo.status = "pending"; // default status
+
         const newOrder = new Order(orderInfo);
         await newOrder.save();
         res.json({
@@ -165,6 +168,7 @@ export async function getQuote(req,res){
 }
 
 export async function getOrders(req, res) {
+    console.log(req.data)
     if(isItCustomer(req)){
         try{
             const orders = await Order.findOne({email : req.user.email})
@@ -185,3 +189,36 @@ export async function getOrders(req, res) {
     }
     
 }
+
+export async function approveOrRejectOrder(req, res) {
+  const orderId = req.params.orderId;
+  const status = req.body.status; // ✅ FIXED
+
+  if (isItAdmin(req)) {
+    try {
+      const order = await Order.findOne({ orderId: orderId });
+
+      if (!order) {
+        res.status(404).json({ error: "Order not found" });
+        return;
+      }
+
+      await Order.updateOne(
+        { orderId: orderId },
+        {
+          $set: {
+            status: status,
+            isApproved: status === "Approved" ? "true" : "false",
+          },
+        }
+      );
+
+      res.json({ message: "Order approved/rejected successfully" });
+    } catch (e) {
+      res.status(500).json({ error: "Failed to get order" });
+    }
+  } else {
+    res.status(403).json("Unauthorized");
+  }
+}
+

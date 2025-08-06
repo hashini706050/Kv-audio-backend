@@ -44,9 +44,19 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  isApproved: {
+    type: String,
+    required: true,
+    default: true
+  },
+  status: {
+    type: String,
+    required: true,
+    default: "Pending"
+  },
   totalAmount: {
     type: Number,
-    required: true,
+    required: true
   },
 });
 

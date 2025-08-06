@@ -16,7 +16,11 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3004;
 
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://192.168.x.x:5173'], // Use your real IP here
+  credentials: true // Allow cookies or auth headers like Authorization
+}));
+
 
 app.use(bodyParser.json());
 
